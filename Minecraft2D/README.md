@@ -73,6 +73,14 @@ Om jag använder mig av t.ex. REST API så kan bara klienten prata med servern o
 
 Men om jag använder mig av WebSockets, så kan jag skicka specefika data när saker uppdateras, t.ex. om en person förflyttar sig, så kan jag skicka dem nya kordinaterna och deras UUID.
 
+Kommunikations systemet kommer att bli modulärt och flexibelt.
+Genom att jag använder ett slags "listener" system, där jag har alla funktioner samlat så som att spara filer, ändra blocks, osv alla server delar, i en struct/klass.
+Sen har jag själva kommunikations systemet separat, så att jag kan implementera WebSockets och andra kommunikations system.
+WebSockets är för det mesta till webbsidor och liknande, så om jag vill lägga till flera klienter, så kanske det är bättre att använda någon annan socket typ.
+
+Så genom att ha en gemensam struct/klass över kommunikations systemet, så kan jag kommunicera mellan flera olika socket typer utan att behöva göra några komplicerade ändringar.
+Så varje socket skickar och tar emot samma typ av data och dem har liknande funktioner.
+
 Den kommer också ha i uppgift att spara filer, så som världen/chunks och liknande.
 
 #### Lagring
