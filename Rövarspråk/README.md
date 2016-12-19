@@ -8,7 +8,7 @@ eller go run regex.go
 Så kommer den fråga efter en sträng och sen ge dig en rövarspråks version av strängen.
 
 ## Flödesdiagram (Loop)
-![Flödesdiagram]()
+![Flödesdiagram](https://raw.githubusercontent.com/tryy3/15EL-Dennis-Planting/master/R%C3%B6varspr%C3%A5k/Dennis_Planting-R%C3%B6verspr%C3%A5k-Fl%C3%B6desdiagram-Loop.png)
 
 ## Pseudokod (Loop)
 ```
@@ -29,7 +29,7 @@ Skriv ut rävarsträngen.
 ```
 
 ## Flödesdiagram (Regex)
-![Flödesdiagram]()
+![Flödesdiagram](https://raw.githubusercontent.com/tryy3/15EL-Dennis-Planting/master/R%C3%B6varspr%C3%A5k/Dennis_Planting-R%C3%B6verspr%C3%A5k-Fl%C3%B6desdiagram-Regex.png)
 
 ## Pseudokod (Regex)
 ```
