@@ -31,4 +31,20 @@ https://github.com/gizak/termui
 Saker som jag kan göra för att expandera programmer är att lägga till save/load funtion, så att du kan fortsätta på ett korsord om du inte vart färdig med det.
 
 Möjligtvis att jag också lägger in så man kan göra färdiga korsord som man kan skicka till kompisar och liknande.
-Så att dem har en färdig layout och möjligtvis vissa "hints" som redan är färdiga, sen i samma fil så finns det ett redan löst korsord, så när man listat ut alla rätta bokstäver så har man klarat korsordet.
+Så att dem har en färdig layout och möjligtvis vissa "hints" som redan är färdiga, sen i samma fil så finns det ett redan löst korsord,
+så när man listat ut alla rätta bokstäver så har man klarat korsordet.
+
+## Installation
+För att göra installation lättare så använder jag mig av [Glide](https://github.com/Masterminds/glide).
+Så först så måste man installera Glide.
+
+Sen efter att du har klonat detta projekt (Korsord) så öppnar du en terminal och navigerar till projektet och kör kommandot
+- glide install
+
+Sen kan du bygga detta projekt med Go
+- go build
+
+Sista steget är att köra projekter
+- ./Korsord
+
+Sen följer du bara instruktionerna på terminalen.

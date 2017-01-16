@@ -9,8 +9,9 @@ import (
 	"github.com/jroimartin/gocui"
 )
 
+// Tecken innehåller basen för ett tecken (siffra/bokstav)
 type Tecken struct {
-	Siffra  uint8
+	Siffra  uint8 // Alla tecken innehåller en Siffra
 	Bokstav string
 }
 
@@ -28,6 +29,7 @@ var (
 	gui     *gocui.Gui
 )
 
+// updateList uppdaterar "viewList"
 func updateList(g *gocui.Gui) error {
 	v, err := g.View("viewList")
 	v.Clear()
@@ -54,6 +56,7 @@ func updateList(g *gocui.Gui) error {
 	return nil
 }
 
+// updateMain uppdaterar "viewMain"
 func updateMain(g *gocui.Gui) error {
 	v, err := g.View("viewMain")
 	v.Clear()
@@ -62,6 +65,7 @@ func updateMain(g *gocui.Gui) error {
 		return err
 	}
 
+	// Om HEIGHT och WIDTH har blivit sparade, rendera korsordet.
 	if HEIGHT != -1 && WIDTH != -1 {
 		for y := 0; y <= HEIGHT+1; y++ {
 			for x := 0; x <= WIDTH; x++ {
@@ -94,10 +98,10 @@ func updateMain(g *gocui.Gui) error {
 			fmt.Fprint(v, "\n")
 		}
 	}
-	fmt.Fprintf(v, "%#v", LAYOUT)
 	return nil
 }
 
+// Byt view, används inte just nu, men kan användas i framtiden.
 func nextView(g *gocui.Gui, v *gocui.View) error {
 	if active == 0 {
 		active = 1
@@ -112,6 +116,7 @@ func nextView(g *gocui.Gui, v *gocui.View) error {
 	return nil
 }
 
+// Sätt nuvarande view till att vara den översta (för att vara säker på att olika views inte ligger ovanpå andra)
 func setCurrentViewOnTop(g *gocui.Gui, name string) (*gocui.View, error) {
 	if _, err := g.SetCurrentView(name); err != nil {
 		return nil, err
@@ -119,6 +124,7 @@ func setCurrentViewOnTop(g *gocui.Gui, name string) (*gocui.View, error) {
 	return g.SetViewOnTop(name)
 }
 
+// Första funktionen för att skapa alla views.
 func layout(g *gocui.Gui) error {
 	gui = g
 	maxX, maxY := g.Size()
@@ -150,10 +156,7 @@ func layout(g *gocui.Gui) error {
 		v.Editor = DefaultEditor
 
 		fmt.Fprintln(v, DefaultEditor.Frågor[0].Text(DefaultEditor))
-		err := moveCursor(v)
-		if err != nil {
-			return err
-		}
+		moveCursor(v)
 
 		if _, err = setCurrentViewOnTop(g, "viewCMD"); err != nil {
 			return err
@@ -162,6 +165,8 @@ func layout(g *gocui.Gui) error {
 	return nil
 }
 
+// Säkert stäng av programmet.
+// I framtiden kan man använda detta för att t.ex. spara information och liknande.
 func quit(g *gocui.Gui, v *gocui.View) error {
 	return gocui.ErrQuit
 }

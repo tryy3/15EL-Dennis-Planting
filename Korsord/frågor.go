@@ -16,14 +16,19 @@ import (
 
 type Editor struct {
 	Frågor []*Fråga
-	Nummer int
-	Buf    string
+	Nummer int    // Vilken fråga man just nu är på
+	Buf    string // Buf innehåller svaret på vad nuvarande frågan är
 }
 
 type Fråga struct {
-	Text  func(*Editor) string
-	Check func(string) error
-	Svar  func(string)
+	Text  func(*Editor) string // Här kommer text funktionen att skrivas ut.
+	Check func(string) error   // Kollar om svaret är korrekt
+	Svar  func(string)         // Om svaret är korrekt så körs denna funktion
+}
+
+func (e *Editor) Clear(v *gocui.View) {
+	e.Buf = ""
+	v.Clear()
 }
 
 func (e *Editor) Edit(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
@@ -40,42 +45,32 @@ func (e *Editor) Edit(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier)
 		}
 		e.Buf = e.Buf[:len(e.Buf)-1]
 		v.EditDelete(true)
-		// ...
 	case key == gocui.KeyEnter:
 		if e.Nummer >= len(e.Frågor) {
-			// TODO: Gör något här, typ skriv något error eller bara lägg till en new line.
 			return
 		}
 
 		fråga := e.Frågor[e.Nummer]
 		err := fråga.Check(e.Buf)
 		if err != nil {
-			v.Clear()
+			e.Clear(v)
 			if err.Error() != "" {
 				fmt.Fprintln(v, err)
 			}
 			fmt.Fprintln(v, fråga.Text(e))
-			err = moveCursor(v)
-			if err != nil {
-				panic(err)
-			}
-			e.Buf = ""
+			moveCursor(v)
 			return
 		}
 
 		fråga.Svar(e.Buf)
 		e.Nummer++
-		e.Buf = ""
-		v.Clear()
+		e.Clear(v)
 		if e.Nummer >= len(e.Frågor) {
 			fmt.Fprintln(v, "Inga fler frågor!")
 			return
 		}
 		fmt.Fprintln(v, e.Frågor[e.Nummer].Text(e))
-		err = moveCursor(v)
-		if err != nil {
-			panic(err)
-		}
+		moveCursor(v)
 	}
 }
 

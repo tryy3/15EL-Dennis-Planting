@@ -1,0 +1,5 @@
+package: github.com/tryy3/15EL-Dennis-Planting/Korsord
+import:
+- package: github.com/huandu/xstrings
+- package: github.com/jroimartin/gocui
+  version: v0.3.0

@@ -2,7 +2,7 @@ package main
 
 import "github.com/jroimartin/gocui"
 
-func moveCursor(v *gocui.View) error {
+func moveCursor(v *gocui.View) {
 	_, y := v.Size()
 
 	var prev string
@@ -10,9 +10,11 @@ func moveCursor(v *gocui.View) error {
 	for i := 0; i < y; i++ {
 		str, err := v.Line(i)
 		if err != nil || str == "" {
-			return v.SetCursor(len(prev), i-1)
+			err = v.SetCursor(len(prev), i-1)
+			if err != nil {
+				panic(err)
+			}
 		}
 		prev = str
 	}
-	return nil
 }
