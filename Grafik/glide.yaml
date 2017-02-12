@@ -1,0 +1,6 @@
+package: github.com/tryy3/15EL-Dennis-Planting/Grafik
+import:
+- package: engo.io/ecs
+- package: engo.io/engo
+  subpackages:
+  - common
