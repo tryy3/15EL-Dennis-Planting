@@ -124,6 +124,10 @@ Med andra versionen av den logiska biten så expanderade jag knapp matrixen frå
 
 Bilderna ovan är bilder på processen av knapp matrixen.
 
+Med hjälp av fritzing så gjorde jag också en schematic som visar hur kablarna går.
+
+![schematic](https://github.com/tryy3/15EL-Dennis-Planting/blob/master/ArduinoKalkylator/bilder/schematics.jpg?raw=true)
+
 ### Framtiden/Kritik
 Det finns några saker jag skulle vilja göra i framtiden.
 Det första är att göra kablarna mindre,
