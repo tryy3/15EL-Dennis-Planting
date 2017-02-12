@@ -38,8 +38,10 @@ String Calculator::getBuffer() {
 String Calculator::evaluate() {
     Eval eval(_buffer);
     double x = eval.parse();
-    return String(x,14); // LCD can only print 16 char, x.(14 decimals left)
+    return String(x,14); // Eftersom en LCD bara kan ha 16 karaktärer så om man har decimaler, så kommer man bara ha 14 decimaler i strängen.
 }
+
+
 
 Eval::Eval(String str) {
     _str = str;
@@ -47,14 +49,15 @@ Eval::Eval(String str) {
 
 double Eval::parse() {
     nextChar();
-    double x = parseExpression();
+    double result = parseExpression();
     if (_pos < _str.length()) {
         return -1;
     }
-    return x;
+    return result;
 }
 
 void Eval::nextChar() {
+    // Leta efter nästa Char.
     if (++_pos < _str.length()) {
         _ch = _str.charAt(_pos);
     } else {
@@ -63,9 +66,11 @@ void Eval::nextChar() {
 }
 
 bool Eval::eat(int charToEat) {
+    // Hitta nästa Char
     while (_ch == ' ') {
         nextChar();
     }
+    // Om Char är samma som charToEat, leta efter nästa och return med true.
     if (_ch == charToEat) {
         nextChar();
         return true;
@@ -73,38 +78,42 @@ bool Eval::eat(int charToEat) {
     return false;
 }
 
+
 // Grammar:
 // expression = term | expression `+` term | expression `-` term
 // term = factor | term `*` factor | term `/` factor
 // factor = `+` factor | `-` factor | `(` expression `)`
 //        | number | functionName factor | factor `^` factor
+//
+// Hur denna klass funkar, beskrivs i dokumentationen i README
 double Eval::parseExpression() {
-    double x = parseTerm();
+    double result = parseTerm();
     while(true) {
         if (eat('+')) { // Addition
-            x += parseTerm();
-        } else if (eat('-')) { // subtraction;
-            x -= parseTerm();
+            result += parseTerm();
+        } else if (eat('-')) { // Subtraktion;
+            result -= parseTerm();
         } else {
-            return x;
+            return result;
         }
     }
 }
 
 double Eval::parseTerm() {
-    double x = parseFactor();
+    double result = parseFactor();
     while(true) {
-        if (eat('*')) { // Multiplication
-            x *= parseFactor();
-        } else if (eat('/')) { // Subtraction;
-            x /= parseFactor();
+        if (eat('*')) { // Multiplikation
+            result *= parseFactor();
+        } else if (eat('/')) { // Division;
+            result /= parseFactor();
         } else {
-            return x;
+            return result;
         }
     }
 }
 
 double Eval::parseFactor() {
+    // Mer om unary https://msdn.microsoft.com/en-us/library/ewkkxkwb.aspx
     if (eat('+')) { // Unary plus
         return parseFactor();
     }
@@ -112,28 +121,34 @@ double Eval::parseFactor() {
         return -parseFactor();
     }
 
-    double x;
+    double result;
     int startPos = _pos;
-    if (eat('(')) { // Parantheses
-        x = parseExpression();
+
+    // Paranteser
+    if (eat('(')) {
+        result = parseExpression();
         eat(')');
-    } else if ((_ch >= '0' && _ch <= '9') || _ch == '.') { // Numbers
+    }
+    // Nummer
+    else if ((_ch >= '0' && _ch <= '9') || _ch == '.') {
         while((_ch >= '0' && _ch <= '9') || _ch == '.')  { nextChar(); }
-        x = atof(_str.substring(startPos, _pos).c_str());
-    } else if (_ch >= 'a' && _ch <= 'z') {
+        result = atof(_str.substring(startPos, _pos).c_str());
+    } 
+    // Funkltioner
+    else if (_ch >= 'a' && _ch <= 'z') {
         while(_ch >= 'a' && _ch <= 'z')  { nextChar(); }
         String func = _str.substring(startPos, _pos);
-        x = parseFactor();
-        if (func.equals("sqrt")) { x = sqrt(x); }
-        else if (func.equals("sin")) { x = sin(x); }
-        else if (func.equals("cos")) { x = cos(x); }
-        else if (func.equals("tan")) { x = tan(x); }
-        else { return -1; } // unknown function
+       result = parseFactor();
+        if (func.equals("sqrt")) { result = sqrt(result); }
+        else if (func.equals("sin")) { result = sin(result); }
+        else if (func.equals("cos")) { result = cos(result); }
+        else if (func.equals("tan")) { result = tan(result); }
+        else { return -1; } // Unknown funktion
     } else {
-        return -1; // unknown char
+        return -1; // Unknown Char
     }
 
-    if (eat('^')) { x = pow(x, parseFactor()); } // Exponentiation.
+    if (eat('^')) { result = pow(result, parseFactor()); } // Exponentiering
 
-    return x;
+    return result;
 }

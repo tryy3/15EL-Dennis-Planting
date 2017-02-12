@@ -5,9 +5,9 @@
 
 /** Error table
  *
- * 101 = First value is not a number.
- * 102 = Last value is not a number.
- * 103 = Next value is not a number.
+ * 101 = Första Value är inte ett nummer.
+ * 102 = Sista Value är inte ett nummer.
+ * 103 = Nästa Value är inte ett nummer.
  */
 
 #include "Calculator.h"
@@ -52,8 +52,7 @@ String Calculator::getBuffer() {
 String Calculator::evaluate() {
     vector<Value> values;
 
-    String val = "";
-    bool push_value = false;
+    String nummer = "";
     for (int i = 0; i < _buffer.length(); i++) {
         char c = _buffer.charAt(i);
 
@@ -61,10 +60,12 @@ String Calculator::evaluate() {
             c == '*' || c == '/' ||
             c == '^' || c == '%') {
 
-            Value value(Method::NUMBER, val);
+            // Skapa en ny Value från tidigare nummer och lägg till den i listan.
+            Value value(Method::NUMBER, nummer);
             values.push_back(value);
-            val = "";
+            nummer = "";
 
+            // Skapa en ny Value.
             if (c == '+') {
                 Value method(Method::PLUS, "+");
                 values.push_back(method);
@@ -82,45 +83,46 @@ String Calculator::evaluate() {
                 values.push_back(method);
             }
         } else {
-            val += c;
+            nummer += c;
         }
     }
 
-    if (val != "") {
-        Value value(Method::NUMBER, val);
+    // Avsluta med att skapa en ny Value från tidigare nummer.
+    if (nummer != "") {
+        Value value(Method::NUMBER, nummer);
         values.push_back(value);
-        val = "";
+        nummer = "";
     }
 
-    // Check if first and last value is numbers.
+    // Kolla om första och sista Value var ett nummer.
     if (values.at(0).getMethod() != Method::NUMBER) {
-        return "Error 101"; // First value is not a number
+        return "Error 101"; // Första Value är inte ett nummer.
     }
     if (values.at(values.size()-1).getMethod() != Method::NUMBER){
-        return "Error 102"; // Second value is not a number
+        return "Error 102"; // Sista Value är inte ett nummer.
     }
 
-    float v = values.at(0).getValue().toFloat(); // The current value.
+    float result = values.at(0).getValue().toFloat(); // Nuvarande resultat
     for (int i = 1; i < values.size()-1; i+=2) {
         Method method = values.at(i).getMethod();
 
         if (values.at(i+1).getMethod() != Method::NUMBER) {
-            return "Error 103"; // Next value is not a number.
+            return "Error 103"; // Nästa Value är inte ett nummer.
         }
 
-        float n = values.at(i+1).getValue().toFloat(); // Next value.
+        float nextValue = values.at(i+1).getValue().toFloat(); // Nästa Value
         
         if (method == Method::PLUS) {
-            v += n;
+            result += nextValue;
         } else if (method == Method::MINUS) {
-            v -= n;
+            result -= nextValue;
         } else if (method == Method::DIVIDE) {
-            v /= n;
+            result /= nextValue;
         } else if (method == Method::MULTIPLY) {
-            v *= n;
+            result *= nextValue;
         } else if (method == Method::POWER) {
-            v = pow(v, n);
+            result = pow(v, nextValue);
         }
     }
-    return String(v);
+    return String(result);
 }
